@@ -5,7 +5,7 @@ from PySide2.QtCore import Qt, QUrl,QTimer
 from PySide2.QtWebEngineWidgets import QWebEngineView
 from cat import get_ai_cat_reply,random_cat_phrase
 import requests
-#from fetch import fetch_sol
+from fetch import fetch_sol
 
 from PySide2.QtCore import QRunnable, QThreadPool, Signal, QObject
 
@@ -27,16 +27,16 @@ class AIWorker(QRunnable):
 
 
 
-def query_sol(address):
-    url = f"http://47.86.28.231:8000/sol?address={address}"
-    try:
-        response = requests.get(url)
-        response.raise_for_status()
-        data = response.json()
-        return data.get('info', '未找到相关信息')
-    except requests.exceptions.RequestException as e:
-        print("请求出错:", e)
-        return "查询失败，请稍后重试。"
+# def query_sol(address):
+#     url = f"http://47.86.28.231:8000/sol?address={address}"
+#     try:
+#         response = requests.get(url)
+#         response.raise_for_status()
+#         data = response.json()
+#         return data.get('info', '未找到相关信息')
+#     except requests.exceptions.RequestException as e:
+#         print("请求出错:", e)
+#         return "查询失败，请稍后重试。"
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -137,7 +137,7 @@ class MainWindow(QMainWindow):
         print("按钮被点击了")
         address, ok = QInputDialog.getText(self, "查询SOL余额", "请输入SOL地址：")
         if ok and address:
-            info = query_sol(address)
+            info = fetch_sol(address)
             QMessageBox.information(self, "查询结果", info)
 
 
