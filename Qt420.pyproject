@@ -1,0 +1,15 @@
+{
+    "files": [
+        ".env",
+        ".env.example",
+        ".gitignore",
+        "README.md",
+        "cat.py",
+        "dog.py",
+        "fox.py",
+        "live2d.html",
+        "main.py",
+        "model_use.py",
+        "requirements.txt"
+    ]
+}

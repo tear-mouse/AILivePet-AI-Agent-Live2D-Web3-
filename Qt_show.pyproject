@@ -1,0 +1,16 @@
+{
+    "files": [
+        ".env",
+        ".env.example",
+        ".gitignore",
+        "Qt_show.pyproject",
+        "Qt_show.pyproject.user",
+        "cat.py",
+        "dog.py",
+        "fox.py",
+        "live2d.html",
+        "main.py",
+        "model_use.py",
+        "requirements.txt"
+    ]
+}

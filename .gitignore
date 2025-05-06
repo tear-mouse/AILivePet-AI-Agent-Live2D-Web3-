@@ -40,5 +40,3 @@ qmlcachefolder/
 # Live2D exports (if any)
 *.model3.json
 
-test/
-
