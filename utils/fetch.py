@@ -1,9 +1,19 @@
 '''
-注意使用要以root(root/utils/fetch.py)作为项目的根目录
-'''
-from api.sol.fetch import Sol
+注意使用要以utils/的父目录作为项目的根目录
 
-def fetch_sol(address:str) -> dict:
+目前提供函数: sol
+>>> from utils.fetch import sol
+>>> sol(address:str) -> dict
+
+'''
+# import sys
+# import os
+# project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+# if project_root not in sys.path:
+#     sys.path.insert(0, project_root)
+from modules.chain_info import *
+
+def sol(address:str) -> dict:
     """
     获取某个 Sol 地址的概览与交易历史
     
@@ -29,5 +39,4 @@ def fetch_sol(address:str) -> dict:
     >>> print(result["history"])
     """
     return Sol(address).main()
-    
     
