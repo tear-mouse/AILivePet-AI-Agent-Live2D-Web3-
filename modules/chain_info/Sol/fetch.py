@@ -5,7 +5,7 @@ class Sol():
     Sol 类用于与 Solana 区块链交互，获取账户信息、代币信息和交易历史。
     """
 # {'http': 'http://127.0.0.1:7897','https': 'http://127.0.0.1:7897'}
-    def __init__(self, address="7nyhQzUMjcj7fEnG5WqMbTbC8e3Z5m6fub2NDAu7E2Nz", proxies={}):
+    def __init__(self, address="", proxies={}):
         self.urls = {
             "SOL": "https://api-v2.solscan.io/v2/account",
             "Token": "https://api-v2.solscan.io/v2/account/tokens",
@@ -29,12 +29,19 @@ class Sol():
         params = {
             "address": self.address
         }
-        res = requests.get(url=url, params=params, headers=self.headers, proxies=self.proxies)
-        if res.status_code == 200:
-            return res.json()
-        else:
-            print("请求失败")
-            return None
+        
+        try: 
+            res = requests.get(url=url, params=params, headers=self.headers, proxies=self.proxies)
+            # print(res)
+            if res.status_code == 200:
+                return res.json()
+            else:
+                # print("请求失败")
+                raise ValueError("请求被拒绝了")
+        except:
+            # print("请求失败")
+            raise ValueError("请求失败")
+            # return None
         
     def get_SOL(self, url):
         """
@@ -44,6 +51,7 @@ class Sol():
         :return: 包含账户余额的字典。
         """
         res = self.get_res(url)
+        # print(res)
         SOL = res["data"]  # type: ignore
         balance = SOL["lamports"]
         account = {
@@ -125,5 +133,6 @@ class Sol():
         return {"overview": overview, "history": history}
     
 if __name__ == "__main__":
-    sol = Sol()
+    sol = Sol("7nyhQzUMjcj7fEnG5WqMbTbC8e3Z5m6fub2NDAu7E2Nz")
     print(sol.main())
+    # sol.main()

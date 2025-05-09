@@ -38,5 +38,8 @@ def sol(address:str) -> dict:
     >>> print(result["overview"])
     >>> print(result["history"])
     """
-    return Sol(address).main()
+    try:
+        return {"success": True, "data": Sol(address).main()}
+    except Exception as e:
+        return {"success": False, "error": str(e)}
     
