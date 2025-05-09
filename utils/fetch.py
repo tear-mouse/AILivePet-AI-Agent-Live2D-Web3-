@@ -38,7 +38,7 @@ def sol(address:str, port:str='7890') -> dict:
     >>> print(result["overview"])
     >>> print(result["history"])
     """
-    proxy = {'http': 'http://127.0.0.1:7897','https': f'http://127.0.0.1:{port}'}
+    proxy = {'http': f'http://127.0.0.1:{port}','https': f'http://127.0.0.1:{port}'}
     try:
         return {"success": True, "data": Sol(address=address, proxy=proxy).main()}
     except Exception as e:
