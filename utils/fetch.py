@@ -13,7 +13,7 @@
 #     sys.path.insert(0, project_root)
 from modules.chain_info import *
 
-def sol(address:str) -> dict:
+def sol(address:str, port:str='7890') -> dict:
     """
     获取某个 Sol 地址的概览与交易历史
     
@@ -38,8 +38,9 @@ def sol(address:str) -> dict:
     >>> print(result["overview"])
     >>> print(result["history"])
     """
+    proxy = {'http': 'http://127.0.0.1:7897','https': f'http://127.0.0.1:{port}'}
     try:
-        return {"success": True, "data": Sol(address).main()}
+        return {"success": True, "data": Sol(address=address, proxy=proxy).main()}
     except Exception as e:
         return {"success": False, "error": str(e)}
     
