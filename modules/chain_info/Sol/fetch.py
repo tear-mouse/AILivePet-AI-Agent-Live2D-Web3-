@@ -133,6 +133,10 @@ class Sol():
         return {"overview": overview, "history": history}
     
 if __name__ == "__main__":
-    sol = Sol("7nyhQzUMjcj7fEnG5WqMbTbC8e3Z5m6fub2NDAu7E2Nz")
-    print(sol.main())
-    # sol.main()
+    sol = Sol("7nyhQzUMjcj7fEnG5WqMbTbC8e3Z5m6fub2NDAu7E2Nz", proxies={'http': 'http://127.0.0.1:7897','https': 'http://127.0.0.1:7897'})
+    # print(sol.main())
+    data = sol.main()
+    import json
+    data = json.dumps(data)
+    with open("data.json", "w", encoding="utf-8") as f:
+        f.write(str(data))
