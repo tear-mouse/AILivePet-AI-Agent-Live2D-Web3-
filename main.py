@@ -5,7 +5,7 @@ from PySide2.QtCore import Qt, QUrl,QTimer
 from PySide2.QtWebEngineWidgets import QWebEngineView
 from cat import get_ai_cat_reply,random_cat_phrase
 import requests
-from fetch import fetch_sol
+from utils import fetch
 
 from PySide2.QtCore import QRunnable, QThreadPool, Signal, QObject
 
@@ -137,8 +137,9 @@ class MainWindow(QMainWindow):
         print("按钮被点击了")
         address, ok = QInputDialog.getText(self, "查询SOL余额", "请输入SOL地址：")
         if ok and address:
-            info = fetch_sol(address)
-            QMessageBox.information(self, "查询结果", info)
+            res = fetch.sol(address, port="7897") # 使用代理
+            info = res["data"] if res.get("success") else f"Error: {res.get('error')}"
+            QMessageBox.information(self, "查询结果", str(info))
 
 
     def send_message(self):
