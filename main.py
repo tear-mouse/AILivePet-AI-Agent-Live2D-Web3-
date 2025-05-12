@@ -73,17 +73,23 @@ class MainWindow(QMainWindow):
 
         # 提示圆按钮
         self.tip_button = QPushButton("SOL")
-        self.tip_button.setFixedSize(100, 100)
+        self.tip_button.setFixedSize(60, 60)
         self.tip_button.setParent(self.overlay_widget)
-        self.tip_button.move(self.width()+50, 0)
+        self.tip_button.move(self.width() - 70, 10)
         self.tip_button.raise_()
         self.tip_button.show()
         self.tip_button.setStyleSheet("""
             QPushButton {
-                border-radius: 20px;
+                border-radius: 30px;
                 background-color: rgba(0, 0, 0, 150);
                 color: white;
                 font-weight: bold;
+                font-size: 12px;
+                border: 2px solid rgba(255, 255, 255, 0.5);
+            }
+            QPushButton:hover {
+                background-color: rgba(0, 0, 0, 180);
+                border: 2px solid white;
             }
         """)
 
@@ -138,8 +144,72 @@ class MainWindow(QMainWindow):
         address, ok = QInputDialog.getText(self, "查询SOL余额", "请输入SOL地址：")
         if ok and address:
             res = fetch.sol(address, port="7897") # 使用代理
-            info = res["data"] if res.get("success") else f"Error: {res.get('error')}"
-            QMessageBox.information(self, "查询结果", str(info))
+            if res.get("success"):
+                data = res["data"]
+                # 显示余额和代币信息
+                overview_info = f"账户余额: {data['overview']['account']['余额']} SOL\n\n"
+                if data['overview']['token']['数量'] > 0:
+                    token_info = data['overview']['token']['当前持有'][0]
+                    overview_info += f"代币信息:\n"
+                    overview_info += f"名称: {token_info['tokenName']}\n"
+                    overview_info += f"符号: {token_info['tokenSymbol']}\n"
+                    overview_info += f"数量: {token_info['balance']}\n"
+                    overview_info += f"价值: {token_info['value']} USDT"
+                
+                QMessageBox.information(self, "账户概览", overview_info)
+                
+                # 历史交易按钮
+                history_button = QPushButton("查看历史交易", self)
+                history_button.clicked.connect(lambda: self.show_transaction_history(data['history']['transaction']))
+                history_button.setFixedSize(60, 60)
+                history_button.setStyleSheet("""
+                    QPushButton {
+                        border-radius: 30px;
+                        background-color: #4CAF50;
+                        color: white;
+                        font-weight: bold;
+                        font-size: 12px;
+                        border: 2px solid rgba(255, 255, 255, 0.5);
+                        padding: 5px;
+                    }
+                    QPushButton:hover {
+                        background-color: #45a049;
+                        border: 2px solid white;
+                    }
+                """)
+                # 将历史交易按钮放在SOL按钮的下方
+                history_button.move(self.tip_button.x(), self.tip_button.y() + 70)
+                history_button.raise_()
+                history_button.show()
+            else:
+                QMessageBox.warning(self, "查询失败", f"Error: {res.get('error')}")
+
+    def show_transaction_history(self, transactions):
+        history_text = "历史交易记录:\n\n"
+        for tx in transactions:
+            time_str = self.format_timestamp(tx['time'])
+            history_text += f"时间: {time_str}\n"
+            history_text += f"交易方: {', '.join(tx['by'])}\n"
+            history_text += f"交易额: {tx['value']} SOL\n"
+            history_text += f"手续费: {tx['fee']}\n"
+            history_text += "-" * 40 + "\n"
+        
+        msg_box = QMessageBox(self)
+        msg_box.setWindowTitle("交易历史")
+        msg_box.setText(history_text)
+        msg_box.setStyleSheet("""
+            QMessageBox {
+                background-color: white;
+            }
+            QMessageBox QLabel {
+                min-width: 400px;
+            }
+        """)
+        msg_box.exec_()
+
+    def format_timestamp(self, timestamp):
+        from datetime import datetime
+        return datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S')
 
 
     def send_message(self):
@@ -178,7 +248,7 @@ class MainWindow(QMainWindow):
 
 
     def raise_tip_button(self):
-        self.tip_button.move(150, 150)  # 确保在合适位置
+        self.tip_button.move(self.width() - 70, 10)  # 放在右上角
         self.tip_button.raise_()
         self.tip_button.show()
 
