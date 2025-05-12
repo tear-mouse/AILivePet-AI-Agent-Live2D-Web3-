@@ -87,8 +87,9 @@ class Sol():
         transactions = [{
             "time": i["blockTime"],
             "by": i["signer"],
-            "value": i["sol_value"],
-            "fee": i["fee"],
+            "value": float(i["sol_value"]) / 1000000000 if i.get("sol_value") else 0,
+            "fee": float(i["fee"]) / 1000000000 if i.get("fee") else 0,
+
         } for i in res["data"]["transactions"]]
         return transactions
     
